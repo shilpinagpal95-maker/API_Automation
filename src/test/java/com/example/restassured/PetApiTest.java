@@ -16,40 +16,7 @@ public class PetApiTest extends BaseTest {
 
     private static final String PET_CREATE_JSON_PATH = "src/test/resources/testdata/pet_create.json";
 
-    @Test
-    @DisplayName("Test GET /pet/{id} - create then retrieve pet by ID")
-    void testGetPetById() {
-        // Generate a safe int id
-        int petId = ThreadLocalRandom.current().nextInt(1_000_000, Integer.MAX_VALUE / 1000);
 
-        // Create the pet first so the GET assertion is deterministic
-        String createBody = String.format("{\"id\":%d,\"name\":\"doggie\",\"status\":\"available\"}", petId);
-
-        given()
-            .log().all()
-            .contentType(ContentType.JSON)
-            .body(createBody)
-        .when()
-            .post("/pet")
-        .then()
-            .log().all()
-            .statusCode(200)
-            .body("id", equalTo(petId))
-            .body("name", equalTo("doggie"))
-            .body("status", equalTo("available"));
-
-        // Now GET and verify again
-        given()
-            .log().all()
-        .when()
-            .get("/pet/{id}", petId)
-        .then()
-            .log().all()
-            .statusCode(200)
-            .body("id", equalTo(petId))
-            .body("name", equalTo("doggie"))
-            .body("status", equalTo("available"));
-    }
 
     @Test
     @DisplayName("Test POST /pet and GET /pet/{id} - Create a new pet and then verify its details")
