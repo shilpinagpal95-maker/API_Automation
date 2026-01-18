@@ -58,6 +58,8 @@ public class PetApiTest extends BaseTest {
         String petName = "test-pet-" + uniquePetId;
         String petStatus = "pending";
 
+        String petCategory="lion";
+
         // Read JSON template; ensure template uses numeric placeholder for id (no quotes around {{id}})
         String requestBody = new String(Files.readAllBytes(Paths.get(PET_CREATE_JSON_PATH)));
 
@@ -65,6 +67,7 @@ public class PetApiTest extends BaseTest {
         requestBody = requestBody.replace("{{id}}", String.valueOf(uniquePetId));
         requestBody = requestBody.replace("{{name}}", petName);
         requestBody = requestBody.replace("{{status}}", petStatus);
+        requestBody = requestBody.replace("{{category-name}}", petCategory);
 
         // 1. POST /pet to create a new pet
         given()
@@ -89,6 +92,7 @@ public class PetApiTest extends BaseTest {
             .log().all()
             .statusCode(200)
             .body("id", equalTo(uniquePetId))
+                .body("category.name", equalTo(petCategory))
             .body("name", equalTo(petName))
             .body("status", equalTo(petStatus));
     }
